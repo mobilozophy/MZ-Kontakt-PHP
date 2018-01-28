@@ -1,0 +1,21 @@
+{
+    "name": "mobilozophy/mz-kontakt-php",
+    "description": "Mobilozophy - Kontakt.io PHP",
+    "license": "Proprietary",
+    "authors": [
+        {
+            "name": "Jeffrey Wray",
+            "email": "jwray@mobilozophy.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.4",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mobilozophy\\Kontakt\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
