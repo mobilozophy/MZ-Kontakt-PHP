@@ -1,6 +1,6 @@
 {
     "name": "mobilozophy/mz-kontakt-php",
-    "description": "Mobilozophy - Kontakt.io PHP",
+    "description": "Mobilozophy - Kontakt Wrapper",
     "license": "Proprietary",
     "authors": [
         {
@@ -16,6 +16,5 @@
         "psr-4": {
             "Mobilozophy\\Kontakt\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }

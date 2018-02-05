@@ -8,7 +8,7 @@ use GuzzleHttp\Exception\RequestException;
 use function GuzzleHttp\Psr7\str;
 use InvalidArgumentException;
 
-class MZCAPIAPIService extends AbstractAPIService
+class KontaktAPIService extends AbstractAPIService
 {
 
     /**
@@ -25,11 +25,10 @@ class MZCAPIAPIService extends AbstractAPIService
 
             return $this->httpClient->post($requestUrl, [
                 'headers'     => $credentials->getHeaders(),
-                'auth'        => $credentials->toArray(),
                 'form_params' => $params,
                 'proxy' => [
-                    'http'  => 'tcp://10.0.1.6:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.6:8888', // Use this proxy with "https",
+                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
+                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
                     'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
                 ]
             ]);
@@ -50,11 +49,10 @@ class MZCAPIAPIService extends AbstractAPIService
         $requestUrl = $this->getEndpointRequestUrl($id);
             return $this->httpClient->put($requestUrl, [
                 'headers'     => $credentials->getHeaders(),
-                'auth'        => $credentials->toArray(),
                 'form_params' => $params,
                 'proxy' => [
-                    'http'  => 'tcp://10.0.1.6:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.6:8888', // Use this proxy with "https",
+                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
+                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
                     'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
                 ]
             ]);
@@ -77,10 +75,9 @@ class MZCAPIAPIService extends AbstractAPIService
         $requestUrl = $this->getEndpointRequestUrl($id).$includeAddOn;
             return $this->httpClient->get($requestUrl, [
                 'headers' => $credentials->getHeaders(),
-                'auth'    => $credentials->toArray(),
                 'proxy' => [
-                    'http'  => 'tcp://10.0.1.6:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.6:8888', // Use this proxy with "https",
+                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
+                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
                     'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
                 ]
             ]);
@@ -94,17 +91,22 @@ class MZCAPIAPIService extends AbstractAPIService
      * @param Credentials $credentials
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getAll(Credentials $credentials)
+    public function getAll(Credentials $credentials, $include=[])
     {
-        $requestUrl = $this->getEndpointRequestUrl();
+        $queryString='';
+        if ($include)
+        {
+            $queryString='?'.http_build_query($include);
+        }
+        $requestUrl = $this->getEndpointRequestUrl().$queryString;
+//        dd($requestUrl);
             return $this->httpClient->get($requestUrl, [
                 'headers' => $credentials->getHeaders(),
-                'auth'    => $credentials->toArray(),
                 'proxy' => [
-                    'http'  => 'tcp://10.0.1.6:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.6:8888', // Use this proxy with "https",
+                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
+                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
                     'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
-                ]
+                ],
             ]);
 
     }
@@ -122,10 +124,9 @@ class MZCAPIAPIService extends AbstractAPIService
         $requestUrl = $this->getEndpointRequestUrl($id);
             return $this->httpClient->delete($requestUrl, [
                 'headers' => $credentials->getHeaders(),
-                'auth'    => $credentials->toArray(),
                 'proxy' => [
-                    'http'  => 'tcp://10.0.1.6:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.6:8888', // Use this proxy with "https",
+                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
+                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
                     'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
                 ]
             ]);

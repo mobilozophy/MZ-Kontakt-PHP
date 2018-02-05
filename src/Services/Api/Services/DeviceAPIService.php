@@ -3,9 +3,9 @@
 namespace Mobilozophy\Kontakt\Services\Api\Services;
 
 use Mobilozophy\Kontakt\Services\Api\Credentials;
-use Mobilozophy\Kontakt\Services\Api\MZCAPIAPIService;
+use Mobilozophy\Kontakt\Services\Api\KontaktAPIService;
 
-class DeviceAPIService extends MZCAPIAPIService
+class DeviceAPIService extends KontaktAPIService
 {
-    const ENDPOINT = 'beacons/regions';
+    const ENDPOINT = 'device';
 }

@@ -18,16 +18,16 @@ class ServiceBase
 
     /**
      * @param array $data Data to be submitted
-     * @param null|string $account_uuid The account id of the account to perform this call on.
+     * @param null|string $kontakt_api_key The account id of the account to perform this call on.
      * @param bool|string $scope The scope to apply to call (ex. with-children will scope to all child accounts).
      * @param array $otherHeaders Other headers to apply to call.
      * @return bool|mixed
      */
-    public function add(array $data, $account_uuid = null, $scope = false, $otherHeaders=[])
+    public function add(array $data, $kontakt_api_key = null, $otherHeaders=[])
     {
 
         $response = $this->apiService->add(
-            $this->getSubAccountCredentials($account_uuid,$scope,$otherHeaders), $data
+            $this->getSubAccountCredentials($kontakt_api_key,$otherHeaders), $data
         );
         if ($response->getStatusCode() == 200) {
             return json_decode($response->getBody()->getContents());
@@ -41,16 +41,16 @@ class ServiceBase
     /**
      * @param string $id Id (UUID) of the record to be updated.
      * @param array $data Data to be submitted.
-     * @param null|string $account_uuid The account id of the account to perform this call on.
+     * @param null|string $kontakt_api_key The account id of the account to perform this call on.
      * @param bool|string $scope The scope to apply to call (ex. with-children will scope to all child accounts).
      * @param array $otherHeaders Other headers to apply to call.
      * @return bool|mixed
      */
-    public function update($id, array $data, $account_uuid = null, $scope = false, $otherHeaders=[])
+    public function update($id, array $data, $kontakt_api_key = null, $otherHeaders=[])
     {
 
         $response = $this->apiService->update(
-            $this->getSubAccountCredentials($account_uuid,$scope, $otherHeaders), $id, $data, $account_uuid
+            $this->getSubAccountCredentials($kontakt_api_key, $otherHeaders), $id, $data, $kontakt_api_key
         );
         if ($response->getStatusCode() == 200) {
             return json_decode($response->getBody()->getContents());
@@ -63,31 +63,18 @@ class ServiceBase
 
     /**
      * @param string $id Id (UUID) of the record to be retrieved.
-     * @param null|string $account_uuid The account id of the account to perform this call on.
+     * @param null|string $kontakt_api_key The account id of the account to perform this call on.
      * @param bool|string $scope The scope to apply to call (ex. with-children will scope to all child accounts).
      * @param array $otherHeaders Other headers to apply to call.
      * @param null|array|string $include Related items to include in response.
      * @return bool|mixed
      */
-    public function get($id,$account_uuid = null, $scope = false, $otherHeaders=[], $include=null)
+    public function get($id,$kontakt_api_key = null, $otherHeaders=[])
     {
-
-        if(is_string($include))
-        {
-            $includeArray = explode(',',$include);
-        }
-        elseif (!is_array($include))
-        {
-            $includeArray = [];
-        }
-        elseif (is_array($include))
-        {
-            $includeArray = $include;
-        }
 
         try {
             $response = $this->apiService->get(
-                $this->getSubAccountCredentials($account_uuid,$scope, $otherHeaders), $id,$includeArray
+                $this->getSubAccountCredentials($kontakt_api_key, $otherHeaders), $id
             );
             if ($response->getStatusCode() == 200) {
                 return json_decode($response->getBody()->getContents());
@@ -102,15 +89,15 @@ class ServiceBase
 
 
     /**
-     * @param null|string $account_uuid The account id of the account to perform this call on.
+     * @param null|string $kontakt_api_key The account id of the account to perform this call on.
      * @param bool|string $scope The scope to apply to call (ex. with-children will scope to all child accounts).
      * @param array $otherHeaders Other headers to apply to call.
      * @return bool|mixed
      */
-    public function getall($account_uuid = null, $scope = false, $otherHeaders=[])
+    public function getall($kontakt_api_key = null, $otherHeaders=[], $query=[])
     {
         $response = $this->apiService->getAll(
-            $this->getSubAccountCredentials($account_uuid,$scope, $otherHeaders)
+            $this->getSubAccountCredentials($kontakt_api_key, $otherHeaders),$query
         );
         if ($response->getStatusCode() == 200) {
             return json_decode($response->getBody()->getContents());
@@ -123,15 +110,15 @@ class ServiceBase
 
     /**
      * @param string $id Id (UUID) of the record to be deleted.
-     * @param null|string $account_uuid The account id of the account to perform this call on.
+     * @param null|string $kontakt_api_key The account id of the account to perform this call on.
      * @param bool|string $scope The scope to apply to call (ex. with-children will scope to all child accounts).
      * @param array $otherHeaders Other headers to apply to call.
      * @return bool|mixed
      */
-    public function delete($id, $account_uuid = null, $scope = false, $otherHeaders=[])
+    public function delete($id, $kontakt_api_key = null,  $otherHeaders=[])
     {
         $response = $this->apiService->delete(
-            $this->getSubAccountCredentials($account_uuid,$scope, $otherHeaders), $id
+            $this->getSubAccountCredentials($kontakt_api_key, $otherHeaders), $id
         );
         if ($response->getStatusCode() == 200) {
             return json_decode($response->getBody()->getContents());
