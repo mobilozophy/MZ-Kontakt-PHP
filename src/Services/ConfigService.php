@@ -43,10 +43,11 @@ class ConfigService extends ServiceBase
     public function create(array $data, $kontakt_api_key = null, $otherHeaders=[])
     {
 
-        $response = $this->apiService->add(
+        $response = $this->apiService->create(
             $this->getSubAccountCredentials($kontakt_api_key,$otherHeaders), $data
         );
-        if ($response->getStatusCode() == 200) {
+        
+        if ($response->getStatusCode() == 201) {
             return json_decode($response->getBody()->getContents());
         } else
         {

@@ -31,10 +31,15 @@ class ConfigAPIService extends KontaktAPIService
     {
         $requestUrl = $this->getEndpointRequestUrl().'/create';
 
-        return $this->httpClient->post($requestUrl, [
-            'headers'     => $credentials->getHeaders(),
-            'form_params' => $params,
-        ]);
+
+        return $this->httpClient->post(
+            $requestUrl,
+            $this->generateOptions($credentials,
+                [
+                    'form_params' => $params,
+                ]
+            )
+        );
 
     }
 }
