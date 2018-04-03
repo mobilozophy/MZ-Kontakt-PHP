@@ -104,7 +104,8 @@ class KontaktAPIService extends AbstractAPIService
             $queryString='?'.http_build_query($include);
         }
         $requestUrl = $this->getEndpointRequestUrl().$queryString;
-]        return $this->httpClient->get(
+
+        return $this->httpClient->get(
             $requestUrl,
             $this->generateOptions($credentials)
         );
