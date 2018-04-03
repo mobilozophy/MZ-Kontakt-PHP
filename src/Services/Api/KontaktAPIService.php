@@ -1,4 +1,14 @@
 <?php
+/**
+ *
+ * No part of the materials protected by this copyright
+ * may be reproduced,in whole or in part, in any form or by
+ * any means, digital or mechanical, including photocopy, recording,
+ * and broadcasting, without the written consent of Mobilozophy, LLC.
+ *
+ * © 2018. Mobilozophy, LLC.  All Rights Reserved.
+ *
+ */
 
 namespace Mobilozophy\Kontakt\Services\Api;
 
@@ -23,15 +33,14 @@ class KontaktAPIService extends AbstractAPIService
     {
         $requestUrl = $this->getEndpointRequestUrl();
 
-            return $this->httpClient->post($requestUrl, [
-                'headers'     => $credentials->getHeaders(),
-                'form_params' => $params,
-                'proxy' => [
-                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
-                    'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
-                ]
-            ]);
+            return $this->httpClient->post(
+                $requestUrl,
+                $this->generateOptions($credentials,
+                    [
+                        'form_params' => $params,
+                    ]
+                )
+            );
 
     }
 
@@ -47,15 +56,15 @@ class KontaktAPIService extends AbstractAPIService
     public function update(Credentials $credentials, $id, array $params)
     {
         $requestUrl = $this->getEndpointRequestUrl($id);
-            return $this->httpClient->put($requestUrl, [
-                'headers'     => $credentials->getHeaders(),
-                'form_params' => $params,
-                'proxy' => [
-                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
-                    'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
+
+        return $this->httpClient->put(
+            $requestUrl,
+            $this->generateOptions($credentials,
+                [
+                    'form_params' => $params,
                 ]
-            ]);
+            )
+        );
 
     }
 
@@ -73,14 +82,10 @@ class KontaktAPIService extends AbstractAPIService
 
         $includeAddOn = ((!is_null($includesImplode) && $includesImplode!='')?"?include=$includesImplode":'');
         $requestUrl = $this->getEndpointRequestUrl($id).$includeAddOn;
-            return $this->httpClient->get($requestUrl, [
-                'headers' => $credentials->getHeaders(),
-                'proxy' => [
-                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
-                    'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
-                ]
-            ]);
+        return $this->httpClient->get(
+            $requestUrl,
+            $this->generateOptions($credentials)
+        );
 
     }
 
@@ -100,14 +105,10 @@ class KontaktAPIService extends AbstractAPIService
         }
         $requestUrl = $this->getEndpointRequestUrl().$queryString;
 //        dd($requestUrl);
-            return $this->httpClient->get($requestUrl, [
-                'headers' => $credentials->getHeaders(),
-                'proxy' => [
-                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
-                    'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
-                ],
-            ]);
+        return $this->httpClient->get(
+            $requestUrl,
+            $this->generateOptions($credentials)
+        );
 
     }
 
@@ -122,14 +123,10 @@ class KontaktAPIService extends AbstractAPIService
     public function delete(Credentials $credentials, $id)
     {
         $requestUrl = $this->getEndpointRequestUrl($id);
-            return $this->httpClient->delete($requestUrl, [
-                'headers' => $credentials->getHeaders(),
-                'proxy' => [
-                    'http'  => 'tcp://10.0.1.8:8888', // Use this proxy with "http"
-                    'https' => 'tcp://10.0.1.8:8888', // Use this proxy with "https",
-                    'no' => ['.mit.edu', 'foo.com']    // Don't use a proxy with these
-                ]
-            ]);
+        return $this->httpClient->delete(
+            $requestUrl,
+            $this->generateOptions($credentials)
+        );
     }
 
 
@@ -151,6 +148,33 @@ class KontaktAPIService extends AbstractAPIService
         return $baseUrl . '/' . $segments;
     }
 
+    protected function generateOptions(Credentials $credentials, $options = null)
+    {
 
+        $base = [
+            'headers' => $credentials->getHeaders(),
+            'auth' => $credentials->toArray(),
+        ];
 
+        if (isset($options)) {
+            $base = array_merge($base, $options);
+        }
+
+        //Check if we need to proxy the request; really only to be used in a development environement
+        if (env('PROXY_REQUESTS_IP_PORT', false)) {
+            if ( is_bool(env('PROXY_REQUESTS_IP_PORT', false)) ){
+                $address = gethostbyname(trim(exec("hostname"))).':8888';
+            }else
+            {
+                $address = env('PROXY_REQUESTS_IP_PORT');
+            }
+            $proxy = [
+                'proxy' => 'http://' . $address,
+            ];
+            $base = array_merge($base, $proxy);
+        }
+
+        return $base;
+
+    }
 }
